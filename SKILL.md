@@ -1,6 +1,6 @@
 ---
 name: rumsfeld
-description: Adversarial pre-build review that hunts for unknown unknowns in a PRD, spec, architecture proposal, or implementation plan — hidden assumptions, missing concepts, unmodeled state, lifecycle gaps, and category errors in the problem framing itself, not just missing fields or edge cases. Use this whenever a PRD, spec, architecture doc, or project plan looks "done" and someone is about to start implementation. Trigger on phrases like "run rumsfeld", "rumsfeld this", "rumsfeld the PRD", "is this ready to build", "pressure-test this spec", "what are we missing before we build this", "sanity check this plan before we start implementation", or a request to review a requirements doc for blind spots, hidden complexity, or wrong framing before implementation begins. Also trigger proactively when a user says a spec is "ready" or "final" and asks what to do next, since that psychological moment is exactly when this review adds the most value. Do not use this for routine PRD copyediting, line-level code review, or security scanning — those are different tools (see code-review, security-review). Do not use it on ideas that are still exploratory or half-formed; it needs something that already looks implementation-ready.
+description: Adversarial pre-build review that hunts for unknown unknowns in a PRD, spec, architecture proposal, or implementation plan — hidden assumptions, missing concepts, unmodeled state, lifecycle gaps, and category errors in the problem framing itself, not just missing fields or edge cases. Use this whenever a PRD, spec, architecture doc, or project plan looks "done" and someone is about to start implementation. Trigger on phrases like "run rumsfeld", "rumsfeld this", "rumsfeld lite", "deep rumsfeld", "rumsfeld the PRD", "is this ready to build", "pressure-test this spec", "what are we missing before we build this", "sanity check this plan before we start implementation", or a request to review a requirements doc for blind spots, hidden complexity, or wrong framing before implementation begins. Also trigger proactively when a user says a spec is "ready" or "final" and asks what to do next, since that psychological moment is exactly when this review adds the most value. Do not use this for routine PRD copyediting, line-level code review, or security scanning — those are different tools (see code-review, security-review). Do not use it on ideas that are still exploratory or half-formed; it needs something that already looks implementation-ready.
 ---
 
 # rumsfeld
@@ -32,9 +32,46 @@ This is the part most likely to go wrong, so front-load it. `rumsfeld` is not a 
 
 **Surprise Ledger:** look for `SURPRISES.md` (or similar) in the project. If one exists, read it before Phase 3 and carry forward any entries whose `generalized_pattern` plausibly applies to this artifact (resumable jobs, ownership transfer, worker/agent migration, long-running or externally-dependent processes, etc.). Don't inject every past lesson reflexively — only the ones that are structurally similar. Say so explicitly in the report: "something structurally similar surprised us before — does that pattern exist here?"
 
+## Before you start — mode and where to run it
+
+This review is expensive mostly because of *where* and *how widely* it runs, not because of its instructions. Measured on real runs: one reviewer per lens, launched at the end of a long session, cost ~4.5× a grouped run started in a short session, and most lenses converged on the same findings anyway. Settle these two things before Phase 1.
+
+### Pick a mode
+
+| Mode | When | Reviewers | Report |
+|---|---|---|---|
+| **lite** | Small or low-stakes spec; user says "rumsfeld lite" / "quick rumsfeld" | 2: `contrarian` alone + one `systems / lifecycle / operations` cluster. Phases 1, 2 and 5 done by you inline; Phases 4 and 6 only for findings that look foundational. | Sections A, E, I, N of the template only. |
+| **standard** (default) | Anything else | 5: `contrarian` alone + the four clusters below. | Full template. |
+| **deep** | User asks for "deep" / "full" / "every lens", or the spec is foundational and hard to reverse (data model, multi-tenant, billing, auth) — ask first | One per lens (14). | Full template. |
+
+Standard-mode clusters (each reviewer reads only its own lens files):
+
+1. `contrarian` — alone, strongest mandate (see Phase 3)
+2. `systems`, `lifecycle`, `data`
+3. `product`, `interaction`, `human-behavior`
+4. `operations`, `integrations`, `security`
+5. `scale`, `economics`, `time`, `reversibility`
+
+If the user didn't name a mode, use standard and say so in one line.
+
+### Run it in a short context
+
+Check how much is already in this conversation before doing anything else. If the session is long — the spec was written or heavily discussed here, or you've been working a while (roughly 150K+ tokens of context) — **do not run the review in place.** Every turn you take afterwards re-reads the whole conversation, including one turn for each reviewer that finishes, and that tail is where a third of the cost of past runs went.
+
+Instead, write a short handoff and stop:
+
+- the artifact path(s) and any supporting docs worth reading;
+- **decisions already made** — things the user has settled or explicitly rejected during this conversation, so the fresh run doesn't re-raise them as findings (a few bullets);
+- the mode;
+- where to write the report.
+
+Then move the work to a fresh context: if this harness lets you start or offer a new session, offer one with that handoff as its brief; otherwise give the user the handoff as a prompt to paste into a new session (starting with "run rumsfeld on …"). Proceed in place only if the user tells you to.
+
+If the session is short, carry on here.
+
 ## The seven phases
 
-Work through these in order. Depth matters more than speed — this is meant to be a careful pass, not a fast one.
+Work through these in order (the one exception: do Phases 4 and 5 while the Phase 3 reviewers run). Depth matters more than speed — this is meant to be a careful pass, not a fast one.
 
 ### Phase 1 — Reconstruct the project model
 
@@ -66,15 +103,25 @@ The `implicit and unverified` ones are the strongest candidates to carry into Ph
 
 ### Phase 3 — Run the lens reviews
 
-Thirteen adversarial lenses live in `lenses/`. Each file is short (~20-40 lines) and self-contained — read a lens file right before applying it, not all thirteen up front. The lenses are:
+Fourteen adversarial lenses live in `lenses/`. Each file is short (~20-40 lines) and self-contained — read a lens file right before applying it, not all of them up front. The lenses are:
 
 `systems`, `lifecycle`, `product`, `interaction`, `human-behavior`, `operations`, `data`, `integrations`, `security`, `scale`, `economics`, `time`, `reversibility`, `contrarian`.
 
-(That's 13 files under `lenses/` — see the reference table at the end of this file for the exact filenames.)
+(See the reference table at the end of this file for the exact filenames.)
 
-**Orchestration:** if you have access to an Agent/subagent tool, spawn one reviewer per lens in parallel, each given the artifact plus its one lens file, and instruct each not to see the others' output — independent framing is the point, it's what keeps everyone from converging on the first plausible interpretation. If you don't have subagents available, work through the lenses sequentially yourself, one at a time, actually reading each lens file before applying it rather than relying on memory of this list.
+**Orchestration:** if you have access to an Agent/subagent tool, spawn one reviewer per cluster for the chosen mode (see "Pick a mode") in parallel, each given the artifact plus only its own lens files, and instruct each not to see the others' output — independent framing is the point, it's what keeps everyone from converging on the first plausible interpretation. If you don't have subagents available, work through the clusters sequentially yourself, actually reading each lens file before applying it rather than relying on memory of this list.
 
-Give the **contrarian** lens the strongest mandate of the thirteen. It asks whether the fundamental abstraction in the spec is wrong — a category error, not an implementation gap. One contrarian finding can outweigh everything else combined; don't let it get averaged down by consensus from the other twelve.
+Every reviewer prompt includes these limits, because tool turns are what reviewers spend tokens on (each turn re-reads everything they've read so far):
+
+- Read the artifact once, in full. Then at most ~5 targeted lookups in the repo to check whether a mechanism already exists — grep and read excerpts, don't read whole directories. No web search or fetch unless the lens can't be applied without an external fact, and then at most 2.
+- Don't read the other lens files, this SKILL.md, or the templates.
+- Pass along the "decisions already made" list, if there is one, and tell the reviewer not to re-raise those unless it can show the decision is unsafe.
+- Return at most 5 findings (contrarian: at most 4), ranked; zero is acceptable. Each finding names a concrete mechanism and cites the artifact section or `file:line`, using the finding schema below. Under 900 words.
+- Write the findings to a file in a scratch directory (one file per reviewer, e.g. `rumsfeld-<cluster>.md`) and reply with only the file path and a one-line summary — so the findings don't pile up in your context before Phase 7.
+
+Give the **contrarian** lens the strongest mandate. It asks whether the fundamental abstraction in the spec is wrong — a category error, not an implementation gap. One contrarian finding can outweigh everything else combined; don't let it get averaged down by consensus from the other clusters. It always runs alone, in every mode.
+
+While reviewers run, do Phases 4 and 5 yourself rather than waiting idle. When a reviewer finishes, don't respond to it individually beyond noting it — wait until all are in, then read their files and go to Phase 6.
 
 ### Phase 4 — Unknown-unknown generators
 
@@ -144,6 +191,8 @@ If every run of this skill ends in NOT READY, the skill is being run too conserv
 ## Producing the report
 
 Write the output to `RUMSFELD.md` in the project (adapt the filename to repo convention if one is obvious — e.g. `docs/RUMSFELD.md`). Use `templates/report.md` for the exact section structure (executive summary, reconstructed model, hidden assumptions, conceptual omissions, high-impact discoveries, product/user discoveries, technical discoveries, the pre-mortem, required PRD amendments, investigations, accepted unknowns, monitoring requirements, rejected concerns, final disposition).
+
+In **lite** mode, write only sections A (executive summary), E (high-impact discoveries), I (required PRD amendments) and N (final disposition), and say at the top that it was a lite run.
 
 Keep section E (high-impact discoveries) intentionally short — that's where burying signal under volume does the most damage.
 
