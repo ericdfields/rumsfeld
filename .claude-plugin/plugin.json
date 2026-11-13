@@ -1,0 +1,14 @@
+{
+  "name": "rumsfeld",
+  "displayName": "Rumsfeld",
+  "version": "1.0.0",
+  "description": "Adversarial pre-build review that hunts for unknown unknowns in a PRD, spec, or plan before implementation starts.",
+  "author": {
+    "name": "Eric Brookfield",
+    "url": "https://github.com/ericdfields"
+  },
+  "homepage": "https://github.com/ericdfields/rumsfeld",
+  "repository": "https://github.com/ericdfields/rumsfeld",
+  "license": "MIT",
+  "keywords": ["prd", "spec-review", "pre-mortem", "architecture", "planning", "risk"]
+}
