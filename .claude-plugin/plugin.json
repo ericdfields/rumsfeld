@@ -10,5 +10,15 @@
   "homepage": "https://github.com/ericdfields/rumsfeld",
   "repository": "https://github.com/ericdfields/rumsfeld",
   "license": "MIT",
-  "keywords": ["prd", "spec-review", "pre-mortem", "architecture", "planning", "risk"]
+  "keywords": [
+    "prd",
+    "spec-review",
+    "pre-mortem",
+    "architecture",
+    "planning",
+    "risk"
+  ],
+  "documentationUrl": "https://github.com/ericdfields/rumsfeld#readme",
+  "supportUrl": "https://github.com/ericdfields/rumsfeld/issues",
+  "privacyPolicyUrl": "https://github.com/ericdfields/rumsfeld/blob/main/PRIVACY.md"
 }
