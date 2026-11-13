@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Adversarial pre-build review that hunts for unknown unknowns in a PRD, spec, or plan before implementation starts.",
   "author": {
-    "name": "Eric Fields",
+    "name": "Eric Brookfield",
     "url": "https://github.com/ericdfields"
   },
   "homepage": "https://github.com/ericdfields/rumsfeld",

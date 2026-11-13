@@ -2,7 +2,7 @@
   "name": "rumsfeld",
   "description": "Adversarial pre-build review for PRDs, specs, and plans.",
   "owner": {
-    "name": "Eric Fields",
+    "name": "Eric Brookfield",
     "url": "https://github.com/ericdfields"
   },
   "plugins": [
