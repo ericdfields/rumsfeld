@@ -18,10 +18,50 @@ Run it when the team says the spec is done. Don't run it on exploratory ideas. D
 
 Trigger phrases include "run rumsfeld", "rumsfeld this PRD", and "is this ready to build?"
 
+## Install
+
+### Claude Code
+
+Add the marketplace, then install the plugin:
+
+```
+/plugin marketplace add ericdfields/rumsfeld
+/plugin install rumsfeld@rumsfeld
+```
+
+On Claude Code 2.1.275 or later, one command does both:
+
+```
+/plugin install rumsfeld --marketplace ericdfields/rumsfeld
+```
+
+### Claude.ai and Claude Desktop
+
+1. Zip the `skills/rumsfeld/` folder.
+2. Open **Settings → Capabilities → Skills**.
+3. Upload the zip.
+
+### Manual
+
+Copy `skills/rumsfeld/` to `~/.claude/skills/rumsfeld/` (all projects) or `.claude/skills/rumsfeld/` (one project).
+
+## Modes
+
+- **lite** — 2 reviewers, short report. Say "rumsfeld lite".
+- **standard** — 5 reviewers, full report. The default.
+- **deep** — one reviewer per lens (14). Say "deep rumsfeld".
+
+The skill writes its report to `RUMSFELD.md` in your project.
+
 ## Contents
 
-- [SKILL.md](SKILL.md) — the skill and its seven phases
-- [lenses/](lenses/) — review lenses (data, security, lifecycle, scale, and more)
-- [generators/](generators/) — pre-mortem and probe generators
-- [templates/](templates/) — report and Surprise Ledger templates
-- [examples/](examples/) — test corpus
+- [skills/rumsfeld/SKILL.md](skills/rumsfeld/SKILL.md) — the skill and its seven phases
+- [skills/rumsfeld/lenses/](skills/rumsfeld/lenses/) — review lenses (data, security, lifecycle, scale, and more)
+- [skills/rumsfeld/generators/](skills/rumsfeld/generators/) — pre-mortem and probe generators
+- [skills/rumsfeld/templates/](skills/rumsfeld/templates/) — report and Surprise Ledger templates
+- [skills/rumsfeld/examples/](skills/rumsfeld/examples/) — test corpus
+- [.claude-plugin/](.claude-plugin/) — plugin and marketplace manifests
+
+## License
+
+[MIT](LICENSE)

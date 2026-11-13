@@ -1,0 +1,18 @@
+{
+  "name": "rumsfeld",
+  "description": "Adversarial pre-build review for PRDs, specs, and plans.",
+  "owner": {
+    "name": "Eric Fields",
+    "url": "https://github.com/ericdfields"
+  },
+  "plugins": [
+    {
+      "name": "rumsfeld",
+      "source": "./",
+      "description": "Adversarial pre-build review that hunts for unknown unknowns in a PRD, spec, or plan before implementation starts.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "tags": ["prd", "spec-review", "pre-mortem", "architecture", "planning"]
+    }
+  ]
+}
